@@ -3,8 +3,8 @@
 A lightweight remote shell service that exposes a local HTTP shell over a public Cloudflare Tunnel URL.  
 Designed for agent-based remote invocation (e.g. Claude Code, Cursor, Aider, etc.) so an AI agent can execute commands, upload, and download files on a remote machine (Colab, VPS, laptop, etc.).
 
-- **Server side**: Python HTTP server + Cloudflare Tunnel  
-- **Client side**: Simple Bash CLI (`shell`) that talks to the public tunnel URL
+- **Server side**: Python HTTP server (`shell_tunnel.py`) + Cloudflare Tunnel  
+- **Client side**: Simple Bash CLI (`shell_tunnel.sh`) that talks to the public tunnel URL
 
 ## Features
 
@@ -19,8 +19,8 @@ Designed for agent-based remote invocation (e.g. Claude Code, Cursor, Aider, etc
 
 ```
 .
-├── server.py          # HTTP shell server + Cloudflare Tunnel
-├── shell              # Client CLI (Bash)
+├── shell_tunnel.py    # HTTP shell server + Cloudflare Tunnel
+├── shell_tunnel.sh    # Client CLI (Bash)
 └── site.txt           # (created by you) contains the tunnel URL
 ```
 
@@ -29,14 +29,14 @@ Designed for agent-based remote invocation (e.g. Claude Code, Cursor, Aider, etc
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Erickrus/cloudflared_shell_tunnel.git
-cd cloudflared_shell_tunnel
+git clone https://github.com/Erickrus/cloudflare_shell_tunnel.git
+cd cloudflare_shell_tunnel
 ```
 
 ### 2. Make the client executable
 
 ```bash
-chmod +x shell
+chmod +x shell_tunnel.sh
 ```
 
 ### 3. (Optional) Create a virtual environment
@@ -53,7 +53,7 @@ No extra Python packages are required (uses only the standard library).
 ### Server side (the machine you want to control)
 
 ```bash
-python3 server.py
+python3 shell_tunnel.py
 ```
 
 The script will:
@@ -85,7 +85,7 @@ Or simply:
 https://random-words-1234.trycloudflare.com
 ```
 
-The `shell` client reads this file to know where the server is.
+The `shell_tunnel.sh` client reads this file to know where the server is.
 
 > **Tip**: You can keep multiple `site.txt` files or use symlinks if you manage several remote machines.
 
@@ -96,10 +96,10 @@ All commands are run from the directory that contains the `shell` script and `si
 ### Execute a command
 
 ```bash
-./shell exec "ls -la"
-./shell exec "uname -a"
-./shell exec "python3 --version"
-./shell exec "pwd && whoami"
+./shell_tunnel.sh exec "ls -la"
+./shell_tunnel.sh exec "uname -a"
+./shell_tunnel.sh exec "python3 --version"
+./shell_tunnel.sh exec "pwd && whoami"
 ```
 
 The exit code of the remote command is preserved.
@@ -107,15 +107,15 @@ The exit code of the remote command is preserved.
 ### Upload a file
 
 ```bash
-./shell upload ./local_script.py /tmp/remote_script.py
-./shell upload ./data.csv /home/user/data.csv
+./shell_tunnel.sh upload ./local_script.py /tmp/remote_script.py
+./shell_tunnel.sh upload ./data.csv /home/user/data.csv
 ```
 
 ### Download a file
 
 ```bash
-./shell download /tmp/remote_script.py
-./shell download /var/log/syslog ./local_syslog
+./shell_tunnel.sh download /tmp/remote_script.py
+./shell_tunnel.sh download /var/log/syslog ./local_syslog
 ```
 
 ### Examples with agents
@@ -124,10 +124,10 @@ Once the tunnel is running and `site.txt` is set, any agent that can run shell c
 
 ```bash
 # Claude Code / Cursor / Aider style
-./shell exec "pip install torch"
-./shell exec "python train.py --epochs 10"
-./shell upload model.py /content/model.py
-./shell download /content/checkpoints/best.pt
+./shell_tunnel.sh exec "pip install torch"
+./shell_tunnel.sh exec "python train.py --epochs 10"
+./shell_tunnel.sh upload model.py /content/model.py
+./shell_tunnel.sh download /content/checkpoints/best.pt
 ```
 
 ## API Reference (for custom clients)
