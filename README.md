@@ -6,6 +6,34 @@ Designed for agent-based remote invocation (e.g. Claude Code, Codex, OpenCode, e
 - **Server side**: Python HTTP server (`shell_tunnel.py`) + Cloudflare Tunnel  
 - **Client side**: Simple Bash CLI (`shell_tunnel.sh`) that talks to the public tunnel URL
 
+```mermaid
+graph TD
+
+    subgraph Server["Server Side (Remote Machine)"]
+        Py["shell_tunnel.py"]
+        HTTP["HTTP Server<br/>:8787"]
+        ShellExec["Shell / Filesystem"]
+    end
+    
+    subgraph Internet
+        CF["Cloudflare Tunnel<br/>(*.trycloudflare.com)"]
+    end
+
+    subgraph Client["Client Side"]
+        Agent["AI Agent<br/>(Claude Code / Cursor / etc.)"]
+        Shell["shell_tunnel.sh"]
+        Site["site.txt<br/>(tunnel URL)"]
+    end
+
+    Agent -->|exec / upload / download| Shell
+    Shell -->|reads| Site
+    Shell -->|HTTPS requests| CF
+    CF -->|forwards| HTTP
+    HTTP --> Py
+    Py --> ShellExec
+```
+
+
 ## Features
 
 - `POST /exec` – run any shell command and get `stdout`, `stderr`, `returncode`
