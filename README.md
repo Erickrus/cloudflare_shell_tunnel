@@ -1,7 +1,7 @@
 # Cloudflare Shell Tunnel
 
 A lightweight remote shell service that exposes a local HTTP shell over a public Cloudflare Tunnel URL.  
-Designed for agent-based remote invocation (e.g. Claude Code, Cursor, Aider, etc.) so an AI agent can execute commands, upload, and download files on a remote machine (Colab, VPS, laptop, etc.).
+Designed for agent-based remote invocation (e.g. Claude Code, Codex, OpenCode, etc.) so an AI agent can execute commands, upload, and download files on a remote machine (Colab, VPS, laptop, etc.).
 
 - **Server side**: Python HTTP server (`shell_tunnel.py`) + Cloudflare Tunnel  
 - **Client side**: Simple Bash CLI (`shell_tunnel.sh`) that talks to the public tunnel URL
